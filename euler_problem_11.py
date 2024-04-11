@@ -25,123 +25,76 @@ horizontal, vertical, diagonal
 """
 
 neg_inf = float('-inf')
+max_prod = neg_inf
 
 # find the maximum product of 4 numbers in a given list
 def max_prod_tu(arr):
     max_prod = neg_inf
-    max_tu = ()
-
     for i in range(len(arr) - 3):
         nums = (arr[i], arr[i+1], arr[i+2], arr[i+3])
         prod = 1
         for each in nums:
             prod *= each
-        if prod > max_prod:
-            max_prod = prod
-            max_tu = nums  
-    
-    return max_tu, max_prod
+        max_prod = max(max_prod, prod)
+    return max_prod
 
 
-# make a list of list out of the string of numbers
-def break2lists(st):
-    st = st.split("\n")
-    li = []
-    for each in st:
-        li.append([int(x) for x in each.split(" ")])
-    return li
+# make a list of lists out of the string of numbers
+st = st.split("\n")
+li = []
+for each in st:
+    li.append([int(x) for x in each.split(" ")])
 
 
-# search for the max product in the vertical axis
-def left_right(li):
-    max_prod = neg_inf
-    maxtu = ()
-    for each in li:
-        new_tu, new_max = max_prod_tu(each)
-        if new_max > max_prod:
-            max_prod = new_max
-            maxtu = new_tu 
-    return maxtu, max_prod
+# search for the max product in the horizontal axis
+for each in li:
+    new_max = max_prod_tu(each)
+    max_prod = max(max_prod, new_max)
 
 
 # search for the max product in the vertical axis
-def up_down(li):
-    max_prod = neg_inf
-    maxtu = ()
-    for i in range(len(li)):
-        newli = []
-        for j in range(len(li) - 3):
-            newli.append(li[j][i])
-        new_tu, new_max = max_prod_tu(newli)
-        if new_max > max_prod:
-            max_prod = new_max
-            maxtu = new_tu 
-    return maxtu, max_prod
+for i in range(len(li)):
+    newli = []
+    for j in range(len(li) - 3):
+        newli.append(li[j][i])
+    new_max = max_prod_tu(newli)
+    max_prod = max(max_prod, new_max) 
 
 
 # search for the max product in the direction of the main diagonal
-def main_diag(li):
-    max_prod = neg_inf
-    max_tu = ()
-    # check for the products in both sides of the main diagonal
-    for i in range(len(li) - 3):                                            
-        li_left = []                                                        
-        li_right = []                                                       
-        # in each iteration of i: 0->17
-        # make a list of left and right diagonals
-        for j in range(len(li) - i):
-            li_left.append(li[i+j][j])
-            li_right.append(li[j][i+j])
-        # find the max product of both lists
-        left_tu = max_prod_tu(li_left)
-        right_tu = max_prod_tu(li_right)
-        # compare and find the max product among two lists
-        if left_tu[1] > max_prod:
-            max_tu = left_tu[0]
-            max_prod = left_tu[1]
-        elif right_tu[1] > max_prod:
-            max_tu = right_tu[0]
-            max_prod = right_tu[1]
-    return max_tu, max_prod   
+# check for the products in both sides of the main diagonal
+for i in range(len(li) - 3):                                            
+    li_left = []                                                        
+    li_right = []                                                       
+    # in each iteration of i: 0->17
+    # make a list of left and right diagonals
+    for j in range(len(li) - i):
+        li_left.append(li[i+j][j])
+        li_right.append(li[j][i+j])
+    # find the max product of both lists
+    left_tu = max_prod_tu(li_left)
+    right_tu = max_prod_tu(li_right)
+    # compare and find the max product among two lists
+    max_prod = max(max_prod, left_tu)
+    max_prod = max(max_prod, right_tu)
         
 
 # search for the max product in the direction of the secondary diagonal
-def second_diag(li):
-    max_prod = neg_inf
-    maxtu = ()
-    len_li = len(li)
-    # check for the products in both sides of the secondary diagonal
-    for i in range(len_li - 3):                                            
-        li_left = []                                                        
-        li_right = []                                                       
-        # in each iteration of i: 0->17
-        # make a list of left and right diagonals
-        for j in range(len_li - i):
-            li_left.append(li[j][len_li - i - j - 1])
-            li_right.append(li[i+j][len_li - j - 1])
-        # find the max product of both lists
-        left_tu = max_prod_tu(li_left)
-        right_tu = max_prod_tu(li_right)
-        # compare and find the max product among two lists
-        if left_tu[1] > max_prod:
-            max_tu = left_tu[0]
-            max_prod = left_tu[1]
-        elif right_tu[1] > max_prod:
-            max_tu = right_tu[0]
-            max_prod = right_tu[1]
-    return max_tu, max_prod   
+len_li = len(li)
+# check for the products in both sides of the secondary diagonal
+for i in range(len_li - 3):                                            
+    li_left = []                                                        
+    li_right = []                                                       
+    # in each iteration of i: 0->17
+    # make a list of left and right diagonals
+    for j in range(len_li - i):
+        li_left.append(li[j][len_li - i - j - 1])
+        li_right.append(li[i+j][len_li - j - 1])
+    # find the max product of both lists
+    left_tu = max_prod_tu(li_left)
+    right_tu = max_prod_tu(li_right)
+    # compare and find the max product among two lists
+    max_prod = max(max_prod, left_tu)
+    max_prod = max(max_prod, right_tu)
 
-
-li = break2lists(st)
-di = {}
-di['leftright'] = left_right(li)
-di['updown'] = up_down(li)
-di['maindiag'] = main_diag(li)
-di['seconddiag'] = second_diag(li)
-
-val = neg_inf
-for value in di.values():
-    if value[1] > val:
-        val = value[1]
-
-print(val)
+print(max_prod)
